@@ -26,3 +26,7 @@ Route::prefix('/auth')->group(function () {
     Route::post('register', [UserAuthController::class, 'register']);
     Route::post('login', [UserAuthController::class, 'login']);
 });
+
+Route::prefix('user')->middleware('auth:sanctum')->group(function () {
+    Route::get('detail', [UserAuthController::class, 'index']);
+});
