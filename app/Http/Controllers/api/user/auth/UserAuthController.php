@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\user\auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,8 +22,58 @@ class UserAuthController extends Controller
         ], 200);
     }
 
-    function login()
+    function login(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|min:8|string'
+        ], [
+            'required' => ':attribute tidak boleh kosong!',
+            'email' => ':attribute email tidak valid!',
+            'string' => ':attribute hanya boleh berupa huruf dan angka!',
+            'min' => ':attribute tidak boleh kurang dari 8 karakter!',
+            'exists' => ':attribute belum terdaftar!'
+        ], [
+            'email' => 'Email',
+            'password' => 'Password'
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'status' => false,
+                'message' => $validator->errors()->first(),
+                'data' => null
+            ], 401);
+        }
+        try {
+            if (Auth::attempt([
+                'email' => $request->email,
+                'password' => $request->password
+            ])) {
+                $user = User::where('email', $request->email)->firstOrFail();
+                return response([
+                    'status' => true,
+                    'message' => 'Selamat datang ' . $user->name,
+                    'data' => [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'token' => $user->createToken('joystation-token')->plainTextToken
+                    ]
+                ], 200);
+            } else {
+                return response([
+                    'status' => false,
+                    'message' => 'Email atau password salah!',
+                    'data' => null
+                ], 401);
+            }
+        } catch (\Throwable $th) {
+            return response([
+                'status' => false,
+                'message' => $th->getMessage(),
+                'data' => null
+            ], 500);
+        }
     }
 
     function register(Request $request)
