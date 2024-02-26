@@ -83,6 +83,19 @@ class UserAuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone_number' => 'required|numeric',
             'password' => 'required|string|min:8'
+        ], [
+            'required' => ':attribute tidak boleh kosong',
+            'string' => ':attribute hanya boleh berupa huruf dan angka',
+            'email' => ':attribute format tidak valid',
+            'unique' => ':attribute telah terdaftar',
+            'numeric' => ':attribute hanya boleh berupa angka',
+            'min' => ':attribute tidak boleh lebih dari 8 karakter'
+
+        ], [
+            'name' => 'Nama',
+            'email' => 'Email',
+            'phone_number' => 'No Handphone',
+            'password' => 'Password'
         ]);
 
         if ($validator->fails()) {
