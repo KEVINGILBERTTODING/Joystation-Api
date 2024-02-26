@@ -11,19 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rooms', function (Blueprint $table) {
+        Schema::create('sticks', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('class_id');
             $table->bigInteger('ps_categories_id');
-            $table->string('room_name');
-            $table->integer('capacity');
+            $table->string('image');
             $table->float('price');
-            $table->boolean('ac');
-            $table->string('tv');
+            $table->string('condition');
             $table->float('discount');
-            $table->boolean('smoking_area');
-            $table->tinyInteger('status');
             $table->text('description');
+            $table->tinyInteger('status');
             $table->timestamps();
         });
     }
@@ -33,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rooms');
+        Schema::dropIfExists('sticks');
     }
 };
