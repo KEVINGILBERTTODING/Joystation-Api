@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('booking_id');
             $table->bigInteger('room_id');
-            $table->bigInteger('time_id');
+            $table->bigInteger('time_selected_id');
             $table->date('date');
             $table->string('day');
             $table->float('price');

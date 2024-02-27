@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\admin\PSCategoriesController;
 use App\Http\Controllers\api\user\auth\UserAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,4 +30,11 @@ Route::prefix('/auth')->group(function () {
 
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::get('detail', [UserAuthController::class, 'index']);
+});
+
+Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
+    Route::get('/playstation/categories', [PSCategoriesController::class, 'get']);
+    Route::post('/playstation/categories/store', [PSCategoriesController::class, 'store']);
+    Route::post('/playstation/categories/update/{id}', [PSCategoriesController::class, 'update']);
+    Route::delete('/playstation/categories/destroy/{id}', [PSCategoriesController::class, 'destroy']);
 });
