@@ -1,21 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\api\admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\PsCategories;
+use App\Models\ClassRoom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PSCategoriesController extends Controller
+class ClassRoomController extends Controller
 {
-
-
     function get()
     {
         try {
 
-            $data = PsCategories::paginate();
+            $data = ClassRoom::paginate();
             return response([
                 'status' => true,
                 'message' => 'success',
@@ -33,10 +30,10 @@ class PSCategoriesController extends Controller
     function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'category' => 'required|string'
+            'name' => 'required|string'
         ], [
-            'category.required' => 'Kategori tidak boleh kosong',
-            'category.string' => 'Format kategori tidak valid'
+            'name.required' => 'Nama kelas tidak boleh kosong',
+            'name.string' => 'Format kelas tidak valid'
         ]);
 
         if ($validator->fails()) {
@@ -49,12 +46,12 @@ class PSCategoriesController extends Controller
 
         try {
             $data = [
-                'name' => $request->category,
+                'class_name' => $request->name,
                 'created_at' => now(),
                 'updated_at' => now()
             ];
 
-            $insert = PsCategories::insert($data);
+            $insert = ClassRoom::insert($data);
             if ($insert) {
                 return response([
                     'status' => false,
@@ -64,7 +61,7 @@ class PSCategoriesController extends Controller
             } else {
                 return response([
                     'status' => false,
-                    'message' => 'Gagal menambahkan kategori baru',
+                    'message' => 'Gagal menambahkan kelas baru',
                     'data' => null
                 ], 400);
             }
@@ -80,10 +77,10 @@ class PSCategoriesController extends Controller
     function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'category' => 'required|string'
+            'name' => 'required|string'
         ], [
-            'category.required' => 'Kategori tidak boleh kosong',
-            'category.string' => 'Format kategori tidak valid'
+            'name.required' => 'Nama kelas tidak boleh kosong',
+            'name.string' => 'Format kelas tidak valid'
         ]);
 
         if ($validator->fails()) {
@@ -96,11 +93,11 @@ class PSCategoriesController extends Controller
 
         try {
             $data = [
-                'name' => $request->category,
+                'class_name' => $request->name,
                 'updated_at' => now()
             ];
 
-            $update = PsCategories::where('id', $id)->update($data);
+            $update = ClassRoom::where('id', $id)->update($data);
             if ($update) {
                 return response([
                     'status' => true,
@@ -110,7 +107,7 @@ class PSCategoriesController extends Controller
             } else {
                 return response([
                     'status' => false,
-                    'message' => 'Gagal mengubah kategori',
+                    'message' => 'Gagal mengubah data',
                     'data' => null
                 ], 400);
             }
@@ -126,10 +123,10 @@ class PSCategoriesController extends Controller
     function destroy($id)
     {
         try {
-            $delete = PsCategories::where('id', $id)->delete();
+            $delete = ClassRoom::where('id', $id)->delete();
             if ($delete) {
                 return response([
-                    'status' => true,
+                    'status' => false,
                     'message' => 'Berhasil menghapus data',
                     'data' => null
                 ], 200);
